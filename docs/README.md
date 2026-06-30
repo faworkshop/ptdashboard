@@ -29,3 +29,7 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 
 - Red minibus (no official open-data ETA API)
 - User favorites API from operators (all favorites are app-owned)
+
+## License
+
+Proprietary — not open source. All rights reserved by FA Workshop. See [LICENSE](../LICENSE).

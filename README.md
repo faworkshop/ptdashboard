@@ -13,6 +13,8 @@ A Hong Kong public transport ETA dashboard. Users save favorite bus stops (with 
 
 Red minibus is **not supported** (no official open-data ETA API).
 
+This is a **proprietary, non-open-source** project. See [LICENSE](LICENSE) for terms.
+
 ## Tech stack
 
 | Layer | Technology |

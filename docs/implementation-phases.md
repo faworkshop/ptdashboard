@@ -1,6 +1,6 @@
 # Implementation Phases
 
-Six-phase build plan for PT Dashboard. Each phase produces a testable increment.
+Seven-phase build plan for PT Dashboard. Each phase produces a testable increment.
 
 ## Phase 1 — Reactive Foundation
 
@@ -105,6 +105,38 @@ See [Advertisements](ads.md) for full spec.
 
 ---
 
+## Phase 7 — Monetization (Pro Tier)
+
+**Goal:** Freemium model with HK$18/month Pro subscription.
+
+| Task | Details |
+|------|---------|
+| Stripe setup | HKD product `PT Dashboard Pro` at HK$18/mo; test mode + webhook CLI |
+| Flyway `V4__subscriptions.sql` | `subscriptions`, `dashboards`, `eta_alerts`; `users.tier`, `users.tier_expires_at` |
+| `FeatureGateService` | Enforce free limits: 5 favorites, 1 dashboard, ads on, no alerts |
+| Subscription API | Checkout, portal, webhook handler, `GET /subscription/me` |
+| Ad gate | `GET /ads/active` returns empty for Pro users |
+| `EtaAlertScheduler` | Background FCM push when ETA ≤ threshold (Pro only) |
+| Multiple dashboards | Favorites linked to `dashboard_id`; Pro can create Home/Work boards |
+| Frontend | `/upgrade` page, subscription settings, "Alert me" toggle on cards |
+
+**Pro features (HK$18/mo):**
+
+| Feature | Free | Pro |
+|---------|------|-----|
+| Favorites | 5 max | Unlimited |
+| Refresh | 60s | 30s (MTR 10s) |
+| Ads | Yes | Ad-free |
+| Push alerts | No | ETA threshold notifications |
+| Dashboards | 1 | Multiple named |
+| PWA | Basic | Full install |
+
+**Exit criteria:** Free user hits favorite limit with upgrade CTA; Pro checkout upgrades tier; ads hidden; push alert fires in test.
+
+See [Monetization](monetization.md) for full spec.
+
+---
+
 ## Dependency graph
 
 ```mermaid
@@ -116,9 +148,11 @@ flowchart LR
   P4 --> P5[Phase 5 Ads]
   P4 --> P6[Phase 6 Polish]
   P5 --> P6
+  P5 --> P7[Phase 7 Pro Tier]
+  P6 --> P7
 ```
 
-Phases 2 and 3 can run in parallel after Phase 1. Frontend (Phase 4) requires both ETA and search APIs.
+Phases 2 and 3 can run in parallel after Phase 1. Frontend (Phase 4) requires both ETA and search APIs. Monetization (Phase 7) builds on ads (Phase 5) and a stable app (Phase 6).
 
 ## Risks
 
@@ -131,6 +165,8 @@ Phases 2 and 3 can run in parallel after Phase 1. Frontend (Phase 4) requires bo
 | NLB POST JSON differs from GET operators | 2 | Dedicated `NlbClient` |
 | Ad impression abuse | 5 | IP rate limiting; fire-and-forget writes |
 | Red minibus user expectation | 4 | UI copy: green minibus only |
+| Stripe webhook missed | 7 | Daily subscription reconciliation from Stripe API |
+| Pro limits bypassed client-side | 7 | `FeatureGateService` enforces on backend |
 
 ## Scaffold command
 

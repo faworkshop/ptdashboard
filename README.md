@@ -9,7 +9,8 @@ A Hong Kong public transport ETA dashboard. Users save favorite bus stops (with 
 - **MTR** — heavy rail next-train times (AEL, TCL, TML, TKL, EAL, SIL, TWL, ISL, KTL, DRL)
 - **User accounts** — PostgreSQL-backed favorites synced across devices
 - **Route-per-stop favorites** — bus and minibus favorites require a route, not just a stop
-- **Advertisement slots** — configurable ad placements on the dashboard
+- **Advertisement slots** — configurable ad placements on the dashboard (free tier)
+- **Pro subscription** — HK$18/month for unlimited favorites, ad-free, push alerts, and more
 
 Red minibus is **not supported** (no official open-data ETA API).
 
@@ -37,6 +38,7 @@ This is a **proprietary, non-open-source** project. See [LICENSE](LICENSE) for t
 | [Frontend](docs/frontend.md) | Pages, components, user flows |
 | [Advertisements](docs/ads.md) | Ad slot system and impression tracking |
 | [Implementation phases](docs/implementation-phases.md) | Build order and deliverables |
+| [Monetization](docs/monetization.md) | Pro tier, Stripe billing, feature gating |
 
 ## Local development (once scaffolded)
 

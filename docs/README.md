@@ -11,7 +11,8 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 5. **[Upstream APIs](upstream-apis.md)** — External HK government ETA data sources and per-operator integration
 6. **[Frontend](frontend.md)** — React SPA pages, dashboard cards, add-favorite wizard
 7. **[Advertisements](ads.md)** — Ad placements, admin CRUD, impression tracking
-8. **[Implementation phases](implementation-phases.md)** — Six-phase build plan with deliverables
+8. **[Implementation phases](implementation-phases.md)** — Seven-phase build plan with deliverables
+9. **[Monetization](monetization.md)** — Pro tier (HK$18/mo), Stripe, feature gating, push alerts
 
 ## Key design decisions
 
@@ -23,7 +24,8 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 | Favorites storage | PostgreSQL with user accounts linked via `firebase_uid` |
 | Authentication | Firebase Auth (client) + Firebase Admin SDK (server token verification) |
 | ETA data | Proxied through Quarkus (CORS, caching, rate-limit handling) |
-| Ads | Self-hosted ad slots with future third-party network support |
+| Ads | Self-hosted ad slots (free tier); ad-free for Pro |
+| Monetization | Freemium — Pro HK$18/mo via Stripe |
 
 ## Out of scope
 

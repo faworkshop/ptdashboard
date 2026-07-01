@@ -44,6 +44,7 @@ This is a **proprietary, non-open-source** project. See [LICENSE](LICENSE) for t
 | [Implementation phases](docs/implementation-phases.md) | Build order and deliverables |
 | [Monetization](docs/monetization.md) | Pro tier, Stripe billing, feature gating |
 | [Success criteria](docs/success-criteria.md) | Usability, accessibility, performance, launch checklist |
+| [Cursor skill: Linear tickets](.cursor/skills/create-linear-tickets/SKILL.md) | Create Linear backlog from plan phases (AI agent dev & test) |
 
 ## Target users & UX principles
 

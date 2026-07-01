@@ -15,6 +15,7 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 9. **[Implementation phases](implementation-phases.md)** — Seven-phase build plan with deliverables
 10. **[Monetization](monetization.md)** — Pro tier (HK$18/mo), Stripe, feature gating, push alerts
 11. **[Success criteria](success-criteria.md)** — Usability, accessibility, performance, and launch readiness
+12. **Linear backlog** — use Cursor skill `.cursor/skills/create-linear-tickets/` to file agent dev & test issues
 
 ## Key design decisions
 

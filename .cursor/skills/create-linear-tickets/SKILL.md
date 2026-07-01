@@ -167,15 +167,15 @@ Confirm `blockedBy` / `blocks` match intended graph. Fix with `removeBlockedBy` 
 
 Create via `mcp_linear_create_issue_label` if missing:
 
-| Label | Color | Use |
-|-------|-------|-----|
-| `ai-agent` | purple | Work intended for Cursor/agent |
-| `human-review` | orange | Needs human approval before merge |
-| `testing` | green | Test-only issues |
-| `phase-1` … `phase-7` | gray | Maps to implementation phase |
-| `backend` | blue | Quarkus / Java |
-| `frontend` | cyan | React / Web Bundler |
-| `docs` | yellow | Documentation only |
+| Label | Use |
+|-------|-----|
+| `Phase 1` … `Phase 7` | Implementation phase |
+| `Backend` | Quarkus / Java |
+| `Frontend` | React / Web Bundler |
+| `Feature` | New user-facing or API capability |
+| `AI-Ready` | All FAW-52 sections filled — agent can implement without guessing |
+| `Testing` | Test-only issue |
+| `Docs` | Documentation only |
 
 ## Issue title convention
 
@@ -190,42 +190,29 @@ Examples:
 - `[Phase 4] Test: E2E add-favorite wizard (bus + route required)`
 - `[Phase 6] A11y: Lighthouse WCAG 2.1 AA audit on dashboard`
 
-## Description template
+## Description template (FAW-52 style)
 
-Use for every task issue (adapt sections):
+**Reference:** [FAW-52](https://linear.app/faworkshop/issue/FAW-52/admin-reviews-audit-trail-reviewer-notes-for-manual-decisions) — use the same section order for every dev/test issue.
 
-```markdown
-## Summary
-<1–2 sentences — what and why>
+Required sections (in order):
 
-## Scope
-- [ ] Concrete deliverable 1
-- [ ] Concrete deliverable 2
+1. **Context** — why, plan links, related Linear issues (`<issue id="PTD-X">PTD-X</issue>`)
+2. **Scope In** — included work (bullets)
+3. **Out of Scope** — explicit exclusions
+4. **Acceptance Criteria** — verifiable `- [ ]` checkboxes
+5. **Technical Notes** — Frontend / Backend / Database touch points
+6. **Test Plan** — Frontend + Backend subsections
+7. **Verification Commands** — `docker compose`, `./mvnw test`, curl examples
+8. **Definition of Done** — tests, migrations, docs, auth
+9. **Risks / Open Questions**
 
-## References
-- Plan: `docs/implementation-phases.md` → Phase N
-- Spec: `docs/<relevant>.md`
-- Success criteria: `docs/success-criteria.md` → <IDs e.g. F1, P2>
+Set **`blockedBy` / `priority` via MCP** and mention under Context or Technical Notes.
 
-## Exit criteria
-<Copy from plan or success-criteria — must be verifiable>
+Full copy-paste templates: [templates.md](templates.md).
 
-## Dependencies
-- **Blocked by:** <LIN-ids or "none">
-- **Blocks:** <LIN-ids or "none">
-- **Priority:** <Urgent|High|Medium|Low>
+**Do not create thin tickets** with only Summary + Scope — agents and reviewers need Acceptance Criteria and Verification Commands.
 
-## Agent notes
-- Package: `com.faworkshop.ptdashboard`
-- Stack: reactive Quarkus, Mutiny `Uni`, Firebase Auth
-- Do not commit unless user asks
-
-## Testing
-- [ ] Unit / integration test described
-- [ ] Manual verification steps
-```
-
-For **testing-only** issues, lead with **Test plan** and link success criteria IDs (U1, P1, F1, etc.).
+Epic issues use shortened template (see templates.md).
 
 ## Workflow
 
@@ -281,7 +268,7 @@ Create explicit test issues — do not bury testing only in dev task checkboxes.
 | **Usability** | Before launch | `[Phase 6] Test: Usability session (elderly + general public)` |
 | **Perf** | Phase 6 | `[Phase 6] Test: LCP < 2.5s, ETA p95 < 800ms` |
 
-Test issue body must include **steps**, **expected result**, and **success criteria ID**.
+Test issue body must include full FAW-52 sections; **Acceptance Criteria** must map to success criteria IDs (F1, U1, P1, etc.).
 
 ## Agent-development conventions
 
@@ -317,7 +304,7 @@ When filing issues for AI agents:
   "project": "ptdashboard",
   "priority": 3,
   "parentId": "<phase-1-epic-uuid>",
-  "labels": ["ai-agent", "backend", "phase-1"],
+  "labels": ["AI-Ready", "Backend", "Phase 1", "Feature"],
   "blockedBy": ["LIN-101", "LIN-102"],
   "description": "..."
 }

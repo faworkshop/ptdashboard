@@ -31,6 +31,8 @@ flowchart TB
     CTB[rt.data.gov.hk/citybus]
     GMB[data.etagmb.gov.hk]
     MTR[rt.data.gov.hk/mtr]
+    LRT[rt.data.gov.hk/mtr/lrt]
+    MTRBus[rt.data.gov.hk/mtr/bus]
   end
 
   UI --> Auth
@@ -48,6 +50,8 @@ flowchart TB
   RestClient --> CTB
   RestClient --> GMB
   RestClient --> MTR
+  RestClient --> LRT
+  RestClient --> MTRBus
 ```
 
 ## Why proxy through the backend
@@ -86,7 +90,9 @@ The backend is **fully reactive** — no blocking JDBC or `.await().indefinitely
 | Cache name | TTL | Key pattern | Purpose |
 |------------|-----|-------------|---------|
 | `bus-eta` | 60s | `(operator, stopId, route)` | Per-route bus/minibus ETA |
-| `mtr-eta` | 10s | `(line, station)` | MTR next-train schedule |
+| `mtr-eta` | 10s | `(line, station)` | MTR heavy rail next-train schedule |
+| `lrt-eta` | 10s | `(stationId, routeNo)` | Light Rail schedule filtered by route |
+| `mtr-bus-eta` | 10s | `(routeName, busStopId)` | MTR Bus stop arrivals |
 | `stop-search` | 24h | `(type, query)` | Static stop/route metadata |
 
 Cache keys deduplicate upstream calls when multiple users share the same favorite configuration.
@@ -97,6 +103,8 @@ Cache keys deduplicate upstream calls when multiple users share the same favorit
 |--------|----------------------|---------------------|
 | Bus / GMB | ~60s | 60s when tab visible |
 | MTR | ~10s | 60s (backend cache at 10s) |
+| LRT | ~10s | 60s (backend cache at 10s) |
+| MTR Bus | ~10s | 60s (backend cache at 10s) |
 
 Refresh triggers: dashboard load, manual refresh button, React Query `refetchInterval`.
 
@@ -115,7 +123,7 @@ pt_dashboard/
 │   │   ├── entity/                # User, Favorite, AdSlot
 │   │   ├── resource/              # Reactive REST endpoints
 │   │   ├── service/               # EtaService, FavoriteService, SearchService, AdService
-│   │   ├── service/client/        # KmbClient, CitybusClient, GmbClient, MtrClient, NlbClient
+│   │   ├── service/client/        # KmbClient, CitybusClient, GmbClient, MtrClient, LrtClient, MtrBusClient
 │   │   └── dto/                   # Normalized ETA and Ad DTOs
 │   ├── resources/
 │   │   ├── application.properties

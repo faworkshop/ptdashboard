@@ -32,8 +32,8 @@ The frontend is a React + TypeScript SPA bundled via [Quarkus Web Bundler](https
 │  [AdBanner: dashboard_top]          │
 ├─────────────────────────────────────┤
 │  Favorite Card 1  (KMB 720)         │
-│  Favorite Card 2  (MTR TWL @ ADM)   │
-│  Favorite Card 3  (GMB 16M)         │
+│  Favorite Card 2  (MTR TWL @ ADM)        │
+│  Favorite Card 3  (LRT 614 @ Yuen Long) │
 │  [AdBanner: dashboard_inline]       │
 │  Favorite Card 4  ...               │
 ├─────────────────────────────────────┤
@@ -47,11 +47,12 @@ The frontend is a React + TypeScript SPA bundled via [Quarkus Web Bundler](https
 
 ### Favorite cards
 
-#### Bus / minibus card
+#### Bus / minibus / LRT card
 
 - Shows **one saved route** per card
 - Up to 3 upcoming arrivals: destination, ETA minutes, remarks
-- Header: route number, stop name, user label
+- LRT cards show `platform_id` from live schedule
+- Header: route number, stop/station name, user label
 - Stale badge when showing cached data after upstream failure
 - Error state when no data available
 
@@ -70,21 +71,21 @@ Inline ads appear between every 3 favorite cards.
 
 ## Add-favorite wizard
 
-### Bus / minibus flow
+### Bus / minibus / MTR Bus / LRT flow
 
 ```mermaid
 flowchart LR
-  A[Select type] --> B[Search stop]
+  A[Select type] --> B[Search stop or LRT station]
   B --> C[Pick route]
   C --> D[Preview ETA]
   D --> E[Name and save]
 ```
 
-1. **Select type** — KMB, Citybus, NLB, or GMB
-2. **Search stop** — `GET /search/stops?q=...&type=...`
-3. **Pick route (required)** — `GET /search/routes-at-stop?stopId=...&type=...`
-4. **Preview ETA** — `GET /eta/preview?...` shows live arrivals before commit
-5. **Name and save** — default label `"{route} @ {stopName}"`, editable; `POST /favorites`
+1. **Select type** — KMB, Citybus, NLB, GMB, **MTR Bus**, or LRT
+2. **Search stop/station** — `GET /search/stops?q=...&type=...`
+3. **Pick route (required)** — `GET /search/routes-at-stop` (bus/GMB/MTR Bus) or `GET /search/routes-at-station` (LRT); MTR Bus may require picking a `routeName` variant with direction
+4. **Preview ETA** — `GET /eta/preview?...`
+5. **Name and save** — default label `"{route} @ {stopName}"`; `POST /favorites`
 
 Route selection cannot be skipped. The UI disables "Next" until a route is chosen.
 
@@ -127,6 +128,7 @@ web/
 ├── components/
 │   ├── FavoriteCard.tsx
 │   ├── BusEtaCard.tsx
+│   ├── LrtEtaCard.tsx
 │   ├── MtrEtaCard.tsx
 │   ├── AdBanner.tsx
 │   ├── StopSearch.tsx

@@ -27,13 +27,15 @@ Seven-phase build plan for PT Dashboard. Each phase produces a testable incremen
 
 | Task | Details |
 |------|---------|
-| REST clients | `KmbClient`, `CitybusClient`, `NlbClient`, `GmbClient`, `MtrClient` — all reactive |
+| REST clients | `KmbClient`, `CitybusClient`, `NlbClient`, `GmbClient`, `MtrClient`, `LrtClient`, `MtrBusClient` — all reactive |
+| `LrtEtaNormalizer` | Parse `platform_list`, filter by `routeNo` |
+| `MtrBusEtaNormalizer` | POST `getSchedule`, extract `busStop[].bus[]` for saved `busStopId` |
 | `EtaNormalizer` | Per-operator mapping to normalized `EtaEntry` list |
 | `GET /eta/favorites` | `Uni.combine().all()` parallel fetch; Caffeine cache keyed by `(type, stopId, route)` |
 | `GET /eta/preview` | Single favorite preview before save |
 | Unit tests | Recorded JSON fixtures for each normalizer |
 
-**Exit criteria:** `GET /eta/favorites` returns normalized ETAs for KMB, CTB, GMB, and MTR test favorites.
+**Exit criteria:** `GET /eta/favorites` returns normalized ETAs for KMB, CTB, GMB, MTR, LRT, and MTR_BUS test favorites.
 
 ---
 
@@ -45,9 +47,12 @@ Seven-phase build plan for PT Dashboard. Each phase produces a testable incremen
 |------|---------|
 | Static data ingestion | Startup or daily scheduled refresh of stop/route lists into cache |
 | `GET /search/stops` | Name search across operators |
-| `GET /search/routes-at-stop` | **Mandatory route picker data** for bus/GMB |
+| `GET /search/routes-at-stop` | Routes at stop for KMB/CTB/GMB/**MTR Bus** |
+| `GET /meta/mtr-bus/routes` | MTR Bus route variant list |
 | `GET /search/routes` | Route number search (alternative flow) |
-| `GET /meta/mtr/lines` | MTR line + station metadata |
+| `GET /search/routes-at-station` | LRT routes at station (mandatory route picker) |
+| `GET /meta/mtr/lines` | MTR heavy rail line + station metadata |
+| `GET /meta/lrt/stations` | LRT station list |
 
 **Exit criteria:** Can discover a stop, list its routes, preview ETA, and save as favorite entirely via API.
 
@@ -60,7 +65,7 @@ Seven-phase build plan for PT Dashboard. Each phase produces a testable incremen
 | Task | Details |
 |------|---------|
 | Auth pages | Firebase login/register/Google; `onAuthStateChanged` guards; `POST /auth/sync` on sign-in |
-| Dashboard | Per-route bus/GMB cards, MTR cards, auto-refresh (60s) |
+| Dashboard | Per-route bus/GMB/MTR Bus/LRT cards, MTR cards, auto-refresh (60s) |
 | Add-favorite wizard | Type → stop → **required route** → preview → save |
 | Settings | Account info, logout |
 | Stretch | Drag-to-reorder favorites |
@@ -125,7 +130,7 @@ See [Advertisements](ads.md) for full spec.
 | Feature | Free | Pro |
 |---------|------|-----|
 | Favorites | 5 max | Unlimited |
-| Refresh | 60s | 30s (MTR 10s) |
+| Refresh | 60s | 30s (MTR/LRT/MTR Bus 10s cache) |
 | Ads | Yes | Ad-free |
 | Push alerts | No | ETA threshold notifications |
 | Dashboards | 1 | Multiple named |

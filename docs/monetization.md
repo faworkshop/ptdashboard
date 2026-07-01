@@ -7,7 +7,7 @@ PT Dashboard uses a **freemium** model. The free tier is ad-supported with usage
 | Feature | Free | Pro (HK$18/mo) |
 |---------|------|----------------|
 | Favorites | Up to **5** | **Unlimited** |
-| Dashboard refresh | 60s | **30s** (bus/GMB); MTR cache **10s** |
+| Dashboard refresh | 60s | **30s** (bus/GMB); MTR/LRT/MTR Bus cache **10s** |
 | Advertisements | Shown | **Ad-free** |
 | ETA push alerts | — | **Yes** — notify when arrival ≤ N minutes |
 | Named dashboards | 1 (default) | **Multiple** (e.g. Home, Work) |

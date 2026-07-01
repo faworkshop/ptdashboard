@@ -51,7 +51,7 @@ Admin users have Firebase custom claim `{ "admin": true }` for `/admin/ads` endp
 
 ## Favorites
 
-Each favorite belongs to one user. `transport_type` is one of: `KMB`, `CTB`, `NLB`, `GMB`, `MTR`.
+Each favorite belongs to one user. `transport_type` is one of: `KMB`, `CTB`, `NLB`, `GMB`, `MTR`, `LRT`, `MTR_BUS`.
 
 | Column | Type | Notes |
 |--------|------|-------|
@@ -69,14 +69,14 @@ Each favorite belongs to one user. `transport_type` is one of: `KMB`, `CTB`, `NL
 UNIQUE (user_id, transport_type, stop_id, route_key)
 ```
 
-- `stop_id` extracted from `config.stopId` (or `config.station` for MTR)
-- `route_key` is `config.route` or `config.routeId` depending on type
+- `stop_id` extracted from `config.stopId`, `config.busStopId`, `config.station` (MTR), or `config.stationId` (LRT)
+- `route_key` is `config.route`, `config.routeId`, `config.routeNo`, or `config.routeName` depending on type
 - Prevents duplicate stop+route pairs per user
 - Same physical stop may appear multiple times with **different routes**
 
 ### Config schemas
 
-**Route is required** for all bus and minibus types.
+**Route is required** for all bus, minibus, and Light Rail types.
 
 #### KMB
 
@@ -160,7 +160,45 @@ UNIQUE (user_id, transport_type, stop_id, route_key)
 | `direction` | No | `UP` or `DOWN` — filters displayed trains |
 | `platform` | No | Platform number — filters displayed trains |
 
-MTR favorites do **not** have a `route` field. Platform numbers are dynamic and come from live ETA responses.
+MTR heavy rail favorites do **not** have a `route` field. Platform numbers are dynamic and come from live ETA responses.
+
+#### Light Rail (LRT)
+
+```json
+{
+  "stationId": 600,
+  "routeNo": "614",
+  "platformId": 1,
+  "withSpecial": 1
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `stationId` | Yes | Numeric LRT station ID (e.g. `600` = Yuen Long) |
+| `routeNo` | Yes | Route number (e.g. `"614"`, `"751"`); for special routes use value from `additionalInfo1` when `special=1` |
+| `platformId` | No | Filter to a specific platform at the station |
+| `withSpecial` | No | `0` or `1` — passed to upstream API; default `0` |
+
+LRT favorites require **station + route**, consistent with bus/GMB.
+
+#### MTR Bus
+
+```json
+{
+  "routeName": "K65",
+  "busStopId": "K65-U010",
+  "language": "en"
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `routeName` | Yes | Full MTR Bus route variant (e.g. `K65`, `K66 Tai Tong Wong Nai Tun Tsuen to On Hong Road`) — direction encoded in name when variants exist |
+| `busStopId` | Yes | Stop ID on the route (from `busStop[].busStopId`) |
+| `language` | No | `en` or `zh`; default `en` |
+
+MTR Bus favorites require **stop + route**, consistent with franchised bus. Multiple favorites at the same stop with different routes are allowed.
 
 ## Ad slots
 
@@ -181,6 +219,6 @@ See [Advertisements](ads.md) for full details.
 
 ## Validation rules (`FavoriteService`)
 
-1. `POST /favorites` rejects bus/GMB payloads missing `route` or `routeId`
+1. `POST /favorites` rejects bus/GMB/LRT/MTR_BUS payloads missing route or stop fields
 2. `PUT /favorites/{id}` allows updating `label` and `sort_order` only — stop and route are immutable (delete and re-add to change)
 3. MTR favorites require `line` and `station`

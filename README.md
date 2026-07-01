@@ -7,6 +7,8 @@ A Hong Kong public transport ETA dashboard. Users save favorite bus stops (with 
 - **Franchised bus** — KMB/LWB, Citybus (CTB), NLB
 - **Green minibus** — all GMB routes via open data
 - **MTR** — heavy rail next-train times (AEL, TCL, TML, TKL, EAL, SIL, TWL, ISL, KTL, DRL)
+- **Light Rail (LRT)** — MTR Light Rail arrival times at all stations
+- **MTR Bus** — MTR Bus & feeder bus (K12, K65, 506, etc.)
 - **User accounts** — PostgreSQL-backed favorites synced across devices
 - **Route-per-stop favorites** — bus and minibus favorites require a route, not just a stop
 - **Advertisement slots** — configurable ad placements on the dashboard (free tier)

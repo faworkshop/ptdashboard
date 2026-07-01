@@ -49,7 +49,7 @@ List all favorites for the current user, ordered by `sort_order`.
 
 ### `POST /favorites`
 
-Create a favorite. **Route is required** for `KMB`, `CTB`, `NLB`, and `GMB`.
+Create a favorite. **Route is required** for `KMB`, `CTB`, `NLB`, `GMB`, `LRT`, and `MTR_BUS`.
 
 **Request body:**
 
@@ -141,10 +141,14 @@ Live ETA preview before saving a favorite.
 
 | Param | Required | Description |
 |-------|----------|-------------|
-| `transportType` | Yes | `KMB`, `CTB`, `NLB`, `GMB`, `MTR` |
-| `stopId` | Yes* | Stop ID (*not for MTR) |
-| `route` | Yes* | Route number (*bus types) |
+| `transportType` | Yes | `KMB`, `CTB`, `NLB`, `GMB`, `MTR`, `LRT`, `MTR_BUS` |
+| `stopId` | Yes* | Stop ID (*not for MTR/LRT) |
+| `route` | Yes* | Route number (*KMB/CTB) |
 | `routeId` | Yes* | Route ID (*NLB/GMB) |
+| `stationId` | LRT only | LRT station ID (integer) |
+| `routeNo` | LRT only | LRT route number |
+| `routeName` | MTR_BUS only | MTR Bus route variant string |
+| `busStopId` | MTR_BUS only | MTR Bus stop ID |
 | `serviceType` | KMB only | Service type |
 | `line` | MTR only | Line code |
 | `station` | MTR only | Station code |
@@ -159,20 +163,26 @@ Firebase ID token required. Responses are cached (24h TTL for static metadata).
 
 Search stops or stations by name.
 
-**Query parameters:** `q`, `type` (`KMB` | `CTB` | `GMB` | `MTR`)
+**Query parameters:** `q`, `type` (`KMB` | `CTB` | `GMB` | `MTR` | `LRT` | `MTR_BUS`)
 
 ### `GET /search/routes-at-stop`
 
-**Routes serving a given stop** — required for the add-favorite route picker.
+**Routes serving a given stop** — required for bus/GMB/MTR Bus add-favorite route picker.
 
-**Query parameters:** `stopId`, `type` (`KMB` | `CTB` | `GMB`)
+**Query parameters:** `stopId`, `type` (`KMB` | `CTB` | `GMB` | `MTR_BUS`)
+
+### `GET /search/routes-at-station`
+
+**Routes at a Light Rail station** — required for LRT add-favorite route picker.
+
+**Query parameters:** `stationId`, `withSpecial` (optional, `0` | `1`)
 
 **Response example:**
 
 ```json
 [
-  { "route": "720", "destination": "Central", "direction": "O" },
-  { "route": "6", "destination": "Star Ferry", "direction": "I" }
+  { "routeNo": "614", "destination": "Tuen Mun Ferry Pier", "platformId": 1 },
+  { "routeNo": "615", "destination": "Siu Hong", "platformId": 2 }
 ]
 ```
 
@@ -180,11 +190,19 @@ Search stops or stations by name.
 
 Search routes by number (alternative flow: pick route first, then stop).
 
-**Query parameters:** `q`, `type` (`KMB` | `CTB` | `GMB`)
+**Query parameters:** `q`, `type` (`KMB` | `CTB` | `GMB` | `MTR_BUS`)
 
 ### `GET /meta/mtr/lines`
 
-MTR line list with station codes for the MTR favorite picker.
+MTR heavy rail line list with station codes.
+
+### `GET /meta/lrt/stations`
+
+LRT station list (`stationId`, name EN/zh).
+
+### `GET /meta/mtr-bus/routes`
+
+MTR Bus route variants — `routeName` strings with destination descriptions for the route picker.
 
 ---
 

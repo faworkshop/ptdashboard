@@ -20,7 +20,9 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 |----------|--------|
 | Backend paradigm | Fully reactive (Mutiny `Uni`/`Multi`, Hibernate Reactive) |
 | Bus/minibus favorites | **Route required** per stop — one favorite = one stop + one route |
-| MTR favorites | Line + station (+ optional direction/platform) |
+| MTR Bus favorites | **Route + stop required** — `routeName` + `busStopId` |
+| MTR favorites | Heavy rail: line + station (+ optional direction/platform) |
+| LRT favorites | Light Rail: station + route required (+ optional platform) |
 | Favorites storage | PostgreSQL with user accounts linked via `firebase_uid` |
 | Authentication | Firebase Auth (client) + Firebase Admin SDK (server token verification) |
 | ETA data | Proxied through Quarkus (CORS, caching, rate-limit handling) |

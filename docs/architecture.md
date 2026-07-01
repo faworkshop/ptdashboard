@@ -40,6 +40,7 @@ flowchart TB
   UI --> EtaAPI
   UI --> SearchAPI
   UI --> AdsAPI
+  UI --> GA4[Google Analytics 4]
   FavAPI --> Users
   FavAPI --> Favorites
   AdsAPI --> Ads

@@ -10,9 +10,11 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 4. **[API reference](api.md)** — REST endpoints under `/api/v1`
 5. **[Upstream APIs](upstream-apis.md)** — External HK government ETA data sources and per-operator integration
 6. **[Frontend](frontend.md)** — React SPA pages, dashboard cards, add-favorite wizard
-7. **[Advertisements](ads.md)** — Ad placements, admin CRUD, impression tracking
-8. **[Implementation phases](implementation-phases.md)** — Seven-phase build plan with deliverables
-9. **[Monetization](monetization.md)** — Pro tier (HK$18/mo), Stripe, feature gating, push alerts
+7. **[Analytics](analytics.md)** — Google Analytics 4, events, cookie consent
+8. **[Advertisements](ads.md)** — Ad placements, admin CRUD, impression tracking
+9. **[Implementation phases](implementation-phases.md)** — Seven-phase build plan with deliverables
+10. **[Monetization](monetization.md)** — Pro tier (HK$18/mo), Stripe, feature gating, push alerts
+11. **[Success criteria](success-criteria.md)** — Usability, accessibility, performance, and launch readiness
 
 ## Key design decisions
 
@@ -28,6 +30,9 @@ Design and planning documentation for the Hong Kong public transport ETA dashboa
 | ETA data | Proxied through Quarkus (CORS, caching, rate-limit handling) |
 | Ads | Self-hosted ad slots (free tier); ad-free for Pro |
 | Monetization | Freemium — Pro HK$18/mo via Stripe |
+| Analytics | Google Analytics 4 (GA4), consent-gated, no PII |
+| Target users | All HK public transport users — children, elderly, diverse languages |
+| UX goals | Easy to use, fast, clean interface; WCAG 2.1 AA; EN + zh-Hant |
 
 ## Out of scope
 

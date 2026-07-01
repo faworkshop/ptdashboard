@@ -65,8 +65,9 @@ Seven-phase build plan for PT Dashboard. Each phase produces a testable incremen
 | Task | Details |
 |------|---------|
 | Auth pages | Firebase login/register/Google; `onAuthStateChanged` guards; `POST /auth/sync` on sign-in |
-| Dashboard | Per-route bus/GMB/MTR Bus/LRT cards, MTR cards, auto-refresh (60s) |
-| Add-favorite wizard | Type → stop → **required route** → preview → save |
+| Dashboard | Per-route bus/GMB/MTR Bus/LRT cards, MTR cards; ETA minutes as primary element; auto-refresh (60s) |
+| Add-favorite wizard | Type → stop → **required route** → preview → save; ≤ 5 steps |
+| Accessibility | 44 px targets, 16 px+ text, icon+label, focus states |
 | Settings | Account info, logout |
 | Stretch | Drag-to-reorder favorites |
 
@@ -101,12 +102,16 @@ See [Advertisements](ads.md) for full spec.
 | Task | Details |
 |------|---------|
 | Bilingual | EN + zh-Hant; pass `lang` to upstream APIs |
-| Error states | Stale badges, upstream error messages, empty states |
+| Google Analytics | GA4 `gtag.js`, `analytics.ts`, page views + custom events; `GA_MEASUREMENT_ID` env |
+| Cookie consent | `ConsentBanner` — load GA only after accept |
+| Error states | Stale badges, upstream error messages, empty states; plain-language copy per success criteria U8 |
 | Health checks | `/q/health` — DB + upstream reachability |
 | README | Final local dev instructions |
 | Documentation | Keep `docs/` in sync with implementation |
 
-**Exit criteria:** App handles failures gracefully; health endpoint green in dev; README accurate.
+**Exit criteria:** App handles failures gracefully; GA4 receives page views in staging with consent; health endpoint green in dev; README accurate.
+
+See [Analytics](analytics.md).
 
 ---
 
@@ -140,6 +145,8 @@ See [Advertisements](ads.md) for full spec.
 
 See [Monetization](monetization.md) for full spec.
 
+**Success criteria:** Phase 6 exit includes usability, accessibility (WCAG 2.1 AA), performance (LCP < 2.5 s), and bilingual launch checklist — see [Success criteria](success-criteria.md).
+
 ---
 
 ## Dependency graph
@@ -172,6 +179,10 @@ Phases 2 and 3 can run in parallel after Phase 1. Frontend (Phase 4) requires bo
 | Red minibus user expectation | 4 | UI copy: green minibus only |
 | Stripe webhook missed | 7 | Daily subscription reconciliation from Stripe API |
 | Pro limits bypassed client-side | 7 | `FeatureGateService` enforces on backend |
+
+Usability testing (elderly + general public participants) should run after Phase 4, before launch. Criteria in [Success criteria](success-criteria.md).
+
+---
 
 ## Scaffold command
 

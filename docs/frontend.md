@@ -10,6 +10,7 @@ The frontend is a React + TypeScript SPA bundled via [Quarkus Web Bundler](https
 | Tailwind CSS 4 | Styling (Web Bundler built-in support) |
 | React Query (mvnpm) | Server state, auto-refresh for `/eta/favorites` |
 | Firebase JS SDK (mvnpm) | Authentication, ID token management |
+| Google Analytics 4 | Product analytics via `gtag.js` (consent-gated) |
 | Quarkus Web Bundler | Zero-config bundling, no separate Node.js install |
 
 ## Pages
@@ -101,6 +102,15 @@ Route selection cannot be skipped. The UI disables "Next" until a route is chose
 
 Pick route first via `GET /search/routes`, then pick a stop on that route. Route is still required before save.
 
+## Analytics
+
+GA4 integration — see [Analytics](analytics.md).
+
+- `web/analytics.ts` — `initAnalytics`, `trackPageView`, `trackEvent`
+- `ConsentBanner` component — gates GA script load
+- Track route changes, auth events, `add_favorite` (transport type only), upgrade funnel
+- Disabled when `GA_ENABLED=false` (default in dev)
+
 ## Auth
 
 Authentication is handled by **Firebase JS SDK** on the client. See [Authentication](auth.md) for full details.
@@ -119,6 +129,7 @@ web/
 ├── index.html
 ├── app.tsx
 ├── firebase.ts              # Firebase init + auth export
+├── analytics.ts             # GA4 gtag wrapper
 ├── pages/
 │   ├── DashboardPage.tsx
 │   ├── AddFavoritePage.tsx
@@ -126,6 +137,7 @@ web/
 │   ├── RegisterPage.tsx
 │   └── SettingsPage.tsx
 ├── components/
+│   ├── ConsentBanner.tsx
 │   ├── FavoriteCard.tsx
 │   ├── BusEtaCard.tsx
 │   ├── LrtEtaCard.tsx

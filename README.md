@@ -56,22 +56,45 @@ This is a **proprietary, non-open-source** project. See [LICENSE](LICENSE) for t
 
 Full measurable criteria: [docs/success-criteria.md](docs/success-criteria.md).
 
-## Local development (once scaffolded)
+## Local development (Phase 1 backend)
+
+The Phase 1 scaffold is a reactive Quarkus 3 application. Docker / PostgreSQL
+are not required yet — migrations land in [PTD-3](docs/implementation-phases.md).
 
 ```bash
-docker compose up -d    # PostgreSQL on :5432
-./mvnw quarkus:dev      # App on :8080
+# From the repo root
+export JAVA_HOME=/opt/homebrew/opt/openjdk@21   # or any Java 21 install
+./mvnw quarkus:dev                               # App on :8081
 ```
 
-## Scaffold command
+Then verify the app is alive:
 
 ```bash
-quarkus create app com.faworkshop.ptdashboard:pt-dashboard:1.0.0-SNAPSHOT \
-  --extension=rest-jackson,hibernate-reactive-panache,reactive-pg-client,flyway,security,caffeine,rest-client-reactive-jackson
-# Add manually: com.google.firebase:firebase-admin
-quarkus ext add io.quarkiverse.web-bundler:quarkus-web-bundler
+curl -s http://localhost:8081/q/health/live | jq .
+# => { "status": "UP", "checks": [ { "name": "PTDashboard", "status": "UP" } ] }
 ```
+
+Run the test suite:
+
+```bash
+./mvnw test
+```
+
+### Configuration
+
+All runtime config is supplied via environment variables — no secrets are
+committed to the repo. The defaults in `src/main/resources/application.properties`
+assume a local PostgreSQL on `:5432` (not required for PTD-2; required in PTD-3).
+
+| Env var | Purpose | Default |
+|---------|---------|---------|
+| `HTTP_PORT` | App port | `8081` (8080 is occupied by the SDLC webhook server on this host) |
+| `QUARKUS_DATASOURCE_USERNAME` | PostgreSQL user | `ptdashboard` |
+| `QUARKUS_DATASOURCE_PASSWORD` | PostgreSQL password | `ptdashboard` |
+| `QUARKUS_DATASOURCE_REACTIVE_URL` | Reactive URL | `postgresql://localhost:5432/ptdashboard` |
+| `FIREBASE_PROJECT_ID` | Firebase project id (PTD-4) | `pt-dashboard-dev` |
+| `FIREBASE_SERVICE_ACCOUNT_PATH` | Path to Firebase service account JSON (PTD-4) | _(empty)_ |
 
 ## Status
 
-This repository is in the **planning / documentation** stage. Application code has not been implemented yet. See [implementation phases](docs/implementation-phases.md) for the build roadmap.
+Phase 1 backend scaffold is in place. See [implementation phases](docs/implementation-phases.md) for the build roadmap.

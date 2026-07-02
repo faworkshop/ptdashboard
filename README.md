@@ -92,8 +92,30 @@ assume a local PostgreSQL on `:5432` (not required for PTD-2; required in PTD-3)
 | `QUARKUS_DATASOURCE_USERNAME` | PostgreSQL user | `ptdashboard` |
 | `QUARKUS_DATASOURCE_PASSWORD` | PostgreSQL password | `ptdashboard` |
 | `QUARKUS_DATASOURCE_REACTIVE_URL` | Reactive URL | `postgresql://localhost:5432/ptdashboard` |
-| `FIREBASE_PROJECT_ID` | Firebase project id (PTD-4) | `pt-dashboard-dev` |
-| `FIREBASE_SERVICE_ACCOUNT_PATH` | Path to Firebase service account JSON (PTD-4) | _(empty)_ |
+| `FIREBASE_PROJECT_ID` | Firebase project id (required from PTD-4 onward) | _(empty)_ |
+| `FIREBASE_SERVICE_ACCOUNT_PATH` | Path to Firebase service-account JSON (required from PTD-4 onward) | _(empty)_ |
+
+### Authentication
+
+Backend verifies Firebase ID tokens on the Mutiny worker pool via
+`FirebaseAuthFilter` (`com.faworkshop.ptdashboard.security.FirebaseAuthFilter`).
+
+- Protected paths require `Authorization: Bearer <firebase-id-token>`.
+- Public paths (currently `/q/health/*`, `/q/openapi`, etc.) bypass the filter.
+- Verification runs off the Vert.x event loop (see
+  `src/main/java/com/faworkshop/ptdashboard/security/FirebaseTokenVerifier.java`).
+- Verified tokens set `SecurityIdentity` with the Firebase `uid` as principal
+  (`identity.getPrincipal().getName()` → uid), plus `firebase_email` and
+  `firebase_token` attributes and the `user` role.
+- If either `FIREBASE_PROJECT_ID` or `FIREBASE_SERVICE_ACCOUNT_PATH` is
+  blank at boot, `FirebaseAppLifecycle` logs a single warning and the
+  filter rejects every protected request with `401 auth_unavailable`. This
+  is intentional: dev environments without secrets never accidentally grant
+  access to protected paths.
+
+Service-account JSON must NEVER be committed. See `.gitignore` for the
+patterns that exclude `*-firebase-adminsdk-*.json` and
+`firebase-service-account*.json`.
 
 ## Status
 

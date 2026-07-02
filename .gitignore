@@ -1,7 +1,9 @@
 # Maven
 target/
 .mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
+# NOTE: maven-wrapper.jar MUST be tracked in git so CI can run `./mvnw`.
+# Older Maven Wrapper bootstrappers re-download this jar, but newer ones
+# expect to find it locally to avoid first-run network on CI runners.
 
 # IDE
 .idea/

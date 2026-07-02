@@ -1,0 +1,31 @@
+# Maven
+target/
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Quarkus dev / build artifacts
+*.log
+*.pid
+
+# Local secrets / env overrides — never commit
+.env
+.env.local
+.env.*.local
+
+# Firebase service-account JSON (must NEVER be committed)
+*-firebase-adminsdk-*.json
+firebase-service-account*.json

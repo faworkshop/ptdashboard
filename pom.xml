@@ -47,7 +47,7 @@
             <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
 
-        <!-- Database (reactive; no migrations yet — added in PTD-3) -->
+        <!-- Database (reactive runtime; Flyway uses a JDBC datasource for migrations) -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-reactive-panache</artifactId>
@@ -55,6 +55,18 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-reactive-pg-client</artifactId>
+        </dependency>
+
+        <!-- Flyway (added in PTD-3) — JDBC-based migrations. The JDBC driver
+             below pairs with it; Hibernate Reactive Panache + reactive-pg-client
+             (above) remain the runtime data access path for PTD-5 / PTD-6. -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-flyway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
 
         <!-- Security (Firebase filter wired in PTD-4) -->
@@ -102,6 +114,16 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
